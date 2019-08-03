@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt    = require('jsonwebtoken')
 
 const User     = require('../models/App');
-const { appRegisterValidation, appLoginValidation } = require('../validation');
+const { appLoginValidation } = require('../validation');
 const { auth } = require('../middlewares/auth');
 
 router.post('/check_token', (req, res) => { 
@@ -43,9 +43,9 @@ router.post('/refresh_token', async (req, res) => {
 
 router.post('/register', async (req, res) => {
     
-    const { error } = appRegisterValidation(req.body);
+    // const { error } = appRegisterValidation(req.body);
 
-    if( error ) return res.status(400).send(error)
+    // if( error ) return res.status(400).send(error)
     
     const emailExists = await User.findOne({a_email: req.body.email});
 
