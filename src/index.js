@@ -23,5 +23,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use('/api/webs',require('./routes/web'));
 app.use('/api/web_users',require('./routes/web_user'));
+app.use('/api/apps',require('./routes/app'));
 
 app.listen(process.env.PORT || 3000);

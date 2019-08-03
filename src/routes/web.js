@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const Web = require('../models/Web')
+const { verifyToken } = require('../middlewares/auth')
 
-router.get('/', async (req, res) => {
+router.get('/', verifyToken ,async (req, res) => {
     
     const domain = req.query.domain
     let data = {}
