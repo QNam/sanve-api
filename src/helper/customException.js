@@ -17,4 +17,6 @@ var RequestError = createError('RequestError', function(message) {
     this.message = message;
 });
 
-module.exports.RequestError = RequestError;
+module.exports = {
+    RequestError
+}

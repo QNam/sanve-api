@@ -1,7 +1,8 @@
+const dotenv   = require('dotenv');
 const express  = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const dotenv   = require('dotenv');
+const error = require('./helper/customException');
 
 const app = express();
 
@@ -29,7 +30,11 @@ app.use('/api/apps', require('./routes/app'));
 app.use(function (err, req, res, next) {
     console.error(err.stack);
 
-    res.status(500).send(err.message);
+    if (err instanceof error.RequestError) {
+        res.status(400).send(err.message);
+    } else {
+        res.status(500).send(err.message);
+    }
 });
 
 app.listen(process.env.PORT || 3000);

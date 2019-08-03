@@ -13,19 +13,20 @@ var confirmUser = async function(req, res) {
 
    console.log(userSaved)
 
-};
+}
 
 function registerRequestValidation(data) {
     const schema = {
-        name: Joi.string().min(6).required(),
         email: Joi.string().min(6).required(),
         password: Joi.string().min(6).required(),
     };
 
-    const err = Joi.validate(data, schema);
-    if (err) {
-        throw new RequestError(err.error.details);
-    }
+    Joi.validate(data, schema, (err, val) => {
+        console.log(err);
+        if (err)
+            throw new RequestError({ error: err.details[0].message });
+    });
+    
 }
 
 function saveUserToDatabase(email) {
