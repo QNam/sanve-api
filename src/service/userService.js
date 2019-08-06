@@ -53,7 +53,7 @@ async function createUser(body)
     const hashPassword = await bcrypt.hash(body.password, salt);
     const confirmToken = await bcrypt.hash(body.email, salt);
 
-   let user = new WebUser({
+    var user = new WebUser({
         u_first_name: body.first_name,
         u_last_name: body.last_name,
         u_email: body.email,

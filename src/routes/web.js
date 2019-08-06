@@ -1,6 +1,6 @@
-const Router = require('express-async-router').AsyncRouter;
-const router = Router();
-const webService = require('../service/webService');
+const router = require('express').Router();
+const Web = require('../models/Web');
+const verifyToken = require('../service/authService').verifyToken;
 
 router.get('/' ,async (req, res) => {
     

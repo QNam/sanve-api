@@ -3,7 +3,9 @@
 var express = require('express');
 var router = express.Router();
 
-const appService = require('../service/appService');
+const User     = require('../models/App');
+const { appLoginValidation } = require('../validation');
+const { verifyToken } = require('../service/authService');
 
 router.post('/register', async (req, res, next) => {
     
