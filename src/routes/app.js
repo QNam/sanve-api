@@ -26,7 +26,7 @@ router.post('/check_token', (req, res) => {
         });
     
         res.send({status: flagError});
-})
+});
 
 
 router.post('/refresh_token', async (req, res) => { 
@@ -37,7 +37,7 @@ router.post('/refresh_token', async (req, res) => {
 
     console.log(user)
     
-})
+});
 
 
 
@@ -71,7 +71,7 @@ router.post('/register', async (req, res) => {
         res.status(400).send(err)
     }
 
-})
+});
 
 
 router.post('/login', async (req, res) => {
@@ -110,14 +110,13 @@ router.post('/login', async (req, res) => {
             }, 
         );
     
-    
     user.access_token = access_token;
     user.refresh_token = refresh_token;
     await user.save();
 
     res.send({access_token, refresh_token})
     
-})
+});
 
 
 module.exports = router

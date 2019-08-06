@@ -1,15 +1,15 @@
 const jwt = require('jsonwebtoken')
+const AuthenticationError = require('../helper/customException').AuthenticationError;
 
 function verifyToken(req, res, next) {
 
-    const bearerHeader = req.headers['authorization'];
+    const bearerHeader = req.headers['Authentication'];
 
     let flagError = false;
     let flagData  = {};
 
     if (!bearerHeader) {
-
-        res.status(403).send('Forbidden');
+        throw new AuthenticationError('Authentication Error');
 
     } else {
 
@@ -28,7 +28,7 @@ function verifyToken(req, res, next) {
 
                     if (err.name == 'TokenExpiredError') {
 
-                        return res.status(400).send('Token expired')
+                        throw new AuthenticationError('Token expired')
                     }
 
                     return res.status(400).send('Bad Request')
