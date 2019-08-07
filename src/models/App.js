@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
     a_updated_at: {
         type: Date,
         default: null,
-    }
+    },
 });
 
 var data = mongoose.model('app', userSchema);

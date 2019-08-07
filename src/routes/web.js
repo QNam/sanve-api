@@ -1,25 +1,21 @@
-const router = require('express').Router();
-const Web = require('../models/Web')
-const { verifyToken } = require('../middlewares/auth')
+const Router = require('express-async-router').AsyncRouter;
+const router = Router();
+const webService = require('../service/webService');
 
-router.get('/', verifyToken ,async (req, res) => {
+router.get('/' ,async (req, res) => {
     
     const domain = req.query.domain
-    let data = {}
 
-    if(!domain) {
-        return res.status(400).send('Bad Request')
-    }
+    const web = await webService.findByDomain(domain)
 
-    try {
-        
-        data = await Web.findByDomain(domain)
-        res.send(data)
+    res.send(web)
+})
 
-    } catch(err) {
-        if(err.name == "DomainNotExists")
-            res.status(404).send(err)
-    }
+router.post('/create' , async (req, res) => {
+    
+    const web = await webService.createWeb(req.body)
+
+    res.send(web)
 
 })
 

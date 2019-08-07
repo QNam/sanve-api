@@ -1,3 +1,4 @@
+
 const dotenv   = require('dotenv');
 const express  = require('express');
 const mongoose = require('mongoose');
@@ -23,18 +24,24 @@ var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+
+
+
 app.use('/api/webs', require('./routes/web'));
 app.use('/api/user', require('./routes/webUser'));
 app.use('/api/apps', require('./routes/app'));
 
-app.use(function (err, req, res, next) {
-    console.error(err.stack);
 
+app.use(function (err, req, res, next) {
+    
+    console.error(err.stack);
+    
     if (err instanceof error.RequestError) {
         res.status(400).send(err.message);
     } else {
         res.status(500).send(err.message);
     }
+
 });
 
 app.listen(process.env.PORT || 3000);

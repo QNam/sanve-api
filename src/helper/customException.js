@@ -1,9 +1,11 @@
-function createError(name, init) {
+function createError(name, init) 
+{
+    
     function Err(message) {
-    Error.captureStackTrace(this, this.constructor);
-    this.message = message;
-    init && init.apply(this, arguments);
-}
+        Error.captureStackTrace(this, this.constructor);
+        this.message = message;
+        init && init.apply(this, arguments);
+    }
 
     Err.prototype = new Error();
     //set the name property
@@ -13,7 +15,7 @@ function createError(name, init) {
     return Err;
 }
 
-var RequestError = createError('RequestError', function(message) {
+var RequestError = createError('RequestError', function (message) {
     this.message = message;
 });
 

@@ -32,7 +32,7 @@ const webSchema = new mongoose.Schema({
 
 
 webSchema.statics.findByDomain = async (domain) => {
-    // Search for a user by email and password.
+    // Search for a web by domain
     const web = await Web.findOne({ domain: domain })
 
     if (!web) {
