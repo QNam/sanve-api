@@ -19,6 +19,11 @@ var RequestError = createError('RequestError', function (message) {
     this.message = message;
 });
 
+var AuthencticationError = createError('AuthencticationError', function(message) {
+    this.message = message;
+});
+
 module.exports = {
-    RequestError
+    RequestError,
+    AuthencticationError,
 }
