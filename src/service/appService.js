@@ -8,15 +8,15 @@ const RequestError = require('../helper/customException').RequestError;
 function registerRequestValidation(data) 
 {
     const schema = {
-        email: Joi.string().min(6).max(255).required(),
+        email: Joi.string().min(6).email().max(255).required(),
         name: Joi.string().min(1).max(255).required(),
         password: Joi.string().min(6).max(255).required(),
     };
 
     Joi.validate(data, schema, (err, val) => {
-        console.log(err);
+       
         if (err)
-            throw new RequestError({ error: err.details[0].message });
+            throw new RequestError(err.details[0].message);
     });
     
 }
@@ -25,14 +25,17 @@ function registerRequestValidation(data)
 function loginRequestValidation(data) 
 {
     const schema = {
-        email: Joi.string().required(),
+        email: Joi.string().email().required(),
         password: Joi.string().required(),
     };
 
     Joi.validate(data, schema, (err, val) => {
-        console.log(err);
-        if (err)
-            throw new RequestError({ error: err.details[0].message });
+       
+        if (err){
+            //console.log(err);
+            throw new RequestError( err.details[0].message, err.details );
+        }
+            
     });
     
 }
@@ -58,10 +61,18 @@ async function checkAppToLogin(data)
 
 var  loginApp = async function (body)
 {
+    let checker = false;
+    
+     try {
+        
+        loginRequestValidation(body)
 
-    loginRequestValidation(body)
+        checker = await checkAppToLogin(body)    
+    
+    } catch (error) {
+        throw error
+    }
 
-    let checker = checkAppToLogin(body)
 
     const app = await App.findOne({a_email: body.email});
 
@@ -84,14 +95,17 @@ var  loginApp = async function (body)
      
 }
 
-function saveAppToDatabase(body) 
+async function saveAppToDatabase(body) 
 {
-    App.findOne({email: body.email}, (err, value) => {
-        if (err) throw err;
+    try {
 
-        if (value) throw new RequestError('Email has already been registered');
-
-    });
+        const app = await App.findOne({a_email: body.email});
+        if (app) throw new RequestError('Email has already been registered');
+        
+    } catch (error) {
+        throw error;
+    }
+    
 
     return createApp(body);
 }
@@ -133,11 +147,20 @@ async function createApp(body)
 
 var registerApp = async function(body) 
 {
+    let app = {}
 
-    const err = registerRequestValidation(body);
+    try {
+        
+        registerRequestValidation(body);
 
-    let app = await saveAppToDatabase(body);
+        app = await saveAppToDatabase(body);
 
+    } catch (error) {
+
+        throw error
+
+    }
+    
     return app;
 }
 

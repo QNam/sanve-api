@@ -11,6 +11,8 @@ var confirmUser = async function(req, res) {
  
    let userSaved = await user.save();
 
+   return userSaved
+
 }
 
 
@@ -23,7 +25,7 @@ function registerRequestValidation(data) {
     };
 
     Joi.validate(data, schema, (err, val) => {
-        console.log(err);
+      
         if (err)
             throw new RequestError(err.details[0].message);
     });
@@ -34,6 +36,8 @@ function saveUserToDatabase(body)
 {
    WebUser.findOne({email: body.email}, (err, value) => {
         if (err) throw err;
+
+        console.log(value)
 
         if (value) throw new RequestError('Email has already been registered');
 

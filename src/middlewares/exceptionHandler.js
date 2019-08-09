@@ -1,9 +1,10 @@
 const customException = require('../helper/customException');
 
 function handleException(err, req, res, next) {
+
     errResp = {
         status: 500,
-        error: err.message
+        error: err.message,
     }
 
     if (err instanceof customException.RequestError) {

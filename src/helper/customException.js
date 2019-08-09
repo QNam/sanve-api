@@ -7,12 +7,13 @@ function createError(name, init)
         init && init.apply(this, arguments);
     }
 
-    Err.prototype = new Error();
+    Error.prototype = new Error();
     //set the name property
-    Err.prototype.name = name;
+    Error.prototype.name = name;
     // set the constructor
-    Err.prototype.constructor = Err;
-    return Err;
+    Error.prototype.constructor = Err;
+
+    return Error;
 }
 
 var RequestError = createError('RequestError', function (message) {
