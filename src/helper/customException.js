@@ -32,7 +32,7 @@ if (Object.setPrototypeOf){
     CustomError.__proto__ = Error;
 }
 
-function createRequestValidateError(code, data) 
+function createRequestValidateError(data) 
 {
     return new CustomError(400, errorCode.badRequest, data.message, data);
 }
