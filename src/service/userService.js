@@ -37,8 +37,6 @@ function saveUserToDatabase(body)
    WebUser.findOne({email: body.email}, (err, value) => {
         if (err) throw err;
 
-        console.log(value)
-
         if (value) throw new RequestError('Email has already been registered');
 
     });

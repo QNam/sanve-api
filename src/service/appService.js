@@ -16,7 +16,7 @@ function registerRequestValidation(data)
     Joi.validate(data, schema, (err, val) => {
        
         if (err)
-            throw new RequestError(err.details[0].message);
+            throw new RequestError(err.details[0].message,{schema});
     });
     
 }

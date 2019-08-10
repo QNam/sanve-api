@@ -17,7 +17,7 @@ function createError(name, init)
 }
 
 var RequestError = createError('RequestError', function (message) {
-    this.message = message;
+    this.message = message; 
 });
 
 var AuthencticationError = createError('AuthencticationError', function(message) {

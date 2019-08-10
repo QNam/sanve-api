@@ -19,7 +19,7 @@ function createRequestValidate(data)
     };
 
     Joi.validate(data, schema, (err, val) => {
-        console.log(err);
+   
         if (err)
             throw new RequestError({ error: err.details[0].message });
     });
