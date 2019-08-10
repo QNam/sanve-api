@@ -1,30 +1,56 @@
-function createError(name, init) 
-{
-    
-    function Err(message) {
-        Error.captureStackTrace(this, this.constructor);
-        this.message = message;
-        init && init.apply(this, arguments);
-    }
+var errorCode = {
+    badRequest: 2000,
+    dataInvalid: 2001,
 
-    Error.prototype = new Error();
-    //set the name property
-    Error.prototype.name = name;
-    // set the constructor
-    Error.prototype.constructor = Err;
-
-    return Error;
+    authentication: 3000
 }
 
-var RequestError = createError('RequestError', function (message) {
-    this.message = message; 
+function CustomError(status, code, message, data, fileName, lineNumber) 
+{
+    var instance = new Error(message, fileName, lineNumber);
+
+    instance.status = status;
+    instance.code = code;
+    instance.data = data;
+
+    Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
+    return instance;
+}
+
+CustomError.prototype = Object.create(Error.prototype, {
+    constructor: {
+        value: Error,
+        enumerable: false,
+        writable: true,
+        configurable: true
+    }
 });
 
-var AuthencticationError = createError('AuthencticationError', function(message) {
-    this.message = message;
-});
+if (Object.setPrototypeOf){
+    Object.setPrototypeOf(CustomError, Error);
+} else {
+    CustomError.__proto__ = Error;
+}
+
+function createRequestValidateError(code, data) 
+{
+    return new CustomError(400, errorCode.badRequest, data.message, data);
+}
+
+function createRequestError(code, message) 
+{
+    return new CustomError(400, code, message, { message: message });
+}
+
+function createAuthenticationError(code, message) 
+{
+    return new CustomError(401, code, message, { message: message });
+}
 
 module.exports = {
-    RequestError,
-    AuthencticationError,
+    CustomError,
+    createRequestValidateError,
+    createRequestError,
+    createAuthenticationError,
+    errorCode
 }

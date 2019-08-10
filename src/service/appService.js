@@ -2,7 +2,8 @@ const App    = require('../models/App');
 const bcrypt = require('bcryptjs');
 const Joi    = require('@hapi/joi');
 const jwt    = require('jsonwebtoken');
-const RequestError = require('../helper/customException').RequestError;
+const customError = require('../helper/customException');
+const errorCode = customError.errorCode;
 
 
 function registerRequestValidation(data) 
@@ -14,9 +15,13 @@ function registerRequestValidation(data)
     };
 
     Joi.validate(data, schema, (err, val) => {
-       
         if (err)
-            throw new RequestError(err.details[0].message,{schema});
+            throw customError.createRequestValidateError(
+                {
+                    message: err.details[0].message, 
+                    field: err.details[0].message.match(/"(.+)"/)[1]
+                },
+            );
     });
     
 }
@@ -32,8 +37,12 @@ function loginRequestValidation(data)
     Joi.validate(data, schema, (err, val) => {
        
         if (err){
-            //console.log(err);
-            throw new RequestError( err.details[0].message, err.details );
+            throw customError.createRequestValidateError(
+                {
+                    message: err.details[0].message, 
+                    field: err.details[0].message.match(/"(.+)"/)[1]
+                },
+            );
         }
             
     });
@@ -46,13 +55,13 @@ async function checkAppToLogin(data)
 
     
     if(!app) {
-        throw new RequestError("Accout not exists !");
+        throw customError.createAuthenticationError(3000, 'Email/Password invalid');
     }
     
     let checker = await bcrypt.compare(data.password, app.a_password)
 
     if(!checker) {
-        throw new RequestError("Password is wrong !");
+        throw customError.createAuthenticationError(3000, "Email/Password invalid");
     } 
 
     return true;
@@ -63,7 +72,7 @@ var  loginApp = async function (body)
 {
     let checker = false;
     
-     try {
+    try {
         
         loginRequestValidation(body)
 
@@ -100,7 +109,7 @@ async function saveAppToDatabase(body)
     try {
 
         const app = await App.findOne({a_email: body.email});
-        if (app) throw new RequestError('Email has already been registered');
+        if (app) throw customError.createRequestError(errorCode.badRequest, 'Account already existed');
         
     } catch (error) {
         throw error;

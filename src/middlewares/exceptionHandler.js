@@ -1,18 +1,20 @@
-const customException = require('../helper/customException');
+const {CustomError} = require('../helper/customException');
 
-function handleException(err, req, res, next) {
+function handleException(err, req, res, next) 
+{
+    console.log(err);
 
     errResp = {
         status: 500,
-        error: err.message,
+        code: err.code,
+        data: err.data
     }
 
-    if (err instanceof customException.RequestError) {
-        errResp.status = 400
-    } else if (err instanceof customException.AuthenticationError) {
-        errResp.status = 401
+    if (err instanceof CustomError) {
+        errResp.status = err.status
     } else {
-        errResp.error = 'Internal server error';
+        errResp.code = 1000;
+        errResp.data = { message: 'Internal server error' };
     }
 
     res.status(errResp.status).send(errResp);

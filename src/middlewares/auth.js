@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken')
 const AuthenticationError = require('../helper/customException').AuthenticationError;
 
-function verifyToken(req, res, next) {
+function verifyToken(req, res, next) 
+{
 
     const bearerHeader = req.headers['Authentication'];
 

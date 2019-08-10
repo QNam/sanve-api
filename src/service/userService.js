@@ -4,7 +4,8 @@ const mail    = require('../helper/mail');
 const Joi     = require('@hapi/joi');
 const RequestError = require('../helper/customException').RequestError;
 
-var confirmUser = async function(req, res) {
+var confirmUser = async function(req, res) 
+{
 
    const user = await WebUser.findOne({u_confirm_token: req.query.token});
    user.u_confirm = true
@@ -16,7 +17,8 @@ var confirmUser = async function(req, res) {
 }
 
 
-function registerRequestValidation(data) {
+function registerRequestValidation(data) 
+{
     const schema = {
         first_name: Joi.string().max(255).required(),
         last_name: Joi.string().max(255).required(),
@@ -63,7 +65,8 @@ async function createUser(body)
 
 }
 
-var registerUser = async function(body) {
+var registerUser = async function(body) 
+{
 
     const err = registerRequestValidation(body);
 
