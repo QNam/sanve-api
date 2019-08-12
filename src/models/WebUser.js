@@ -1,39 +1,35 @@
 const mongoose = require('mongoose');
 
 const webUserSchema = new mongoose.Schema({
-    wid: {
-        type: String,
-        // required: true
-    },
-    u_first_name: {
-        type: String
-    },
-    u_last_name: {
-        type: String
-    },
-    u_email: {
+    email: {
         type: String,
         required: true,
-        max: 255,
-        min: 6
+        index: true,
+        unique: true
     },
-    u_password: {
+    password: {
         type: String,
         required: true,
-        max: 255,
-        min: 6
     },
-    u_status: {
+    phone: {
+        type: String,
+        required: true,
+        index: true,
+        unique: true
+    },
+    type: {
         type: Number,
-        default: 1
+        default: 0
     },
-    u_confirm: {
-        type: Boolean,
-        default: false
+    permission: {
+        type: [String],
     },
-    u_confirm_token: {
+    refresh_token: {
         type: String
-    }
+    },
+    confirm_token: {
+        type: String
+    },
 
 });
 

@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const webSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        index: true,
+        unique : true,
+    },
     domain: {
         type: String,
         required: true,
@@ -12,22 +18,36 @@ const webSchema = new mongoose.Schema({
         type: Number,
         default: 1,
     },
-    created_at: {
-        type: Date,
-        default: null,
-    },
-    updated_at: {
-        type: Date,
-        default: null,
-    },
-    web_user_id: {
-        type: String,
-        required: true
-    },
     status: {
         type: Number,
-        default: 1,
+        default: 0,
+    },
+    created: {
+        user: {
+            type: String,
+            required: true,
+        },
+        time: {
+            type: Number
+        },
+    },
+    updated: {
+        user: {
+            type: String,
+        },
+        time: {
+            type: Number
+        },
+    },
+    info: {
+        email: {
+            type: String,
+        },
+        address: {
+            type: String,
+        }
     }
+    
 });
 
 
