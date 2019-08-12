@@ -1,8 +1,11 @@
 var errorCode = {
+    unknown: 1000,
+
     badRequest: 2000,
     dataInvalid: 2001,
 
-    authentication: 3000
+    authentication: 3000,
+    accessDenied: 3001,
 }
 
 function CustomError(status, code, message, data, fileName, lineNumber) 
@@ -47,10 +50,15 @@ function createAuthenticationError(code, message)
     return new CustomError(401, code, message, { message: message });
 }
 
+function createAuthorizationError(code, message) {
+    return new CustomError(403, code, message, { message: message });
+}
+
 module.exports = {
     CustomError,
     createRequestValidateError,
     createRequestError,
     createAuthenticationError,
+    createAuthorizationError,
     errorCode
 }

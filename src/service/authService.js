@@ -1,14 +1,15 @@
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
-const AuthenticationError = require('../helper/customException').AuthenticationError;
+const { errorCode, createAuthenticationError } = require('../helper/customException');
 
-function verifyToken(headers, callback) {
+function verifyToken(headers, callback) 
+{
     if (!headers) {
-        throw new AuthenticationError('Authentication Error');
+        throw createAuthenticationError(errorCode.authentication, 'Token invalid');
     }
         
     const bearer = bearerHeader.split(" ");
-    const access_token = bearer[1]
+    const access_token = bearer[1];
 
     const decodedToken = null;
     const verified = jwt.verify(
@@ -18,9 +19,9 @@ function verifyToken(headers, callback) {
             
             if (err != null) {
                 if (err != null && err.name == 'TokenExpiredError') {
-                    err = new AuthenticationError('Token expired');
+                    err = createAuthenticationError(errorCode.authentication, 'Token expired');
                 } else {
-                    err = new AuthenticationError('Token invalid');
+                    err = createAuthenticationError(errorCode.authentication, 'Token invalid');
                 }
 
             } else {
@@ -29,7 +30,8 @@ function verifyToken(headers, callback) {
         });
 }
 
-function generateToken(user, expiredTime, callback) {
+function generateToken(user, expiredTime, callback) 
+{
     var tokenPayload = {
         email: user.email
     };

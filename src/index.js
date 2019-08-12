@@ -24,12 +24,9 @@ var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-
-
 app.use('/api/webs', require('./routes/web'));
 app.use('/api/user', require('./routes/webUser'));
 app.use('/api/apps', require('./routes/app'));
-
 
 app.use(exceptionHandler.handleException);
 
