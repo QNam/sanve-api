@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const webUserSchema = new mongoose.Schema({
+    full_name: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
         required: true,
@@ -20,6 +24,10 @@ const webUserSchema = new mongoose.Schema({
     type: {
         type: Number,
         default: 0
+    },
+    status: {
+        type: Number,
+        default: -1
     },
     permission: {
         type: [String],

@@ -2,13 +2,15 @@ const WebUser = require('../models/WebUser');
 const bcrypt  = require('bcryptjs');
 const mail    = require('../helper/mail');
 const Joi     = require('@hapi/joi');
-const RequestError = require('../helper/customException').RequestError;
+const customError = require('../helper/customException');
+const errorCode = customError.errorCode;
+
 
 var confirmUser = async function(req, res) 
 {
 
-   const user = await WebUser.findOne({u_confirm_token: req.query.token});
-   user.u_confirm = true
+   const user = await WebUser.findOne({confirm_token: req.query.token});
+   user.status = 1
  
    let userSaved = await user.save();
 
@@ -20,28 +22,31 @@ var confirmUser = async function(req, res)
 function registerRequestValidation(data) 
 {
     const schema = {
-        first_name: Joi.string().max(255).required(),
-        last_name: Joi.string().max(255).required(),
+        full_name: Joi.string().max(255).required(),
         email: Joi.string().min(6).required(),
+        phone: Joi.string().min(9).required(),
         password: Joi.string().min(6).required(),
     };
 
     Joi.validate(data, schema, (err, val) => {
       
         if (err)
-            throw new RequestError(err.details[0].message);
+            throw customError.createRequestValidateError(
+                {
+                    message: err.details[0].message, 
+                    field: err.details[0].message.match(/"(.+)"/)[1]
+                },
+            );
     });
     
 }
-
-function saveUserToDatabase(body) 
+ 
+async function saveUserToDatabase(body) 
 {
-   WebUser.findOne({email: body.email}, (err, value) => {
-        if (err) throw err;
+   let user = await WebUser.findOne({email: body.email});
 
-        if (value) throw new RequestError('Email has already been registered');
-
-    });
+     if (user) 
+        throw customError.createRequestError(errorCode.badRequest, 'Account already existed');
 
     return createUser(body);
 }
@@ -54,16 +59,16 @@ async function createUser(body)
     const confirmToken = await bcrypt.hash(body.email, salt);
 
     var user = new WebUser({
-        u_first_name: body.first_name,
-        u_last_name: body.last_name,
-        u_email: body.email,
-        u_password: hashPassword,
-        u_confirm_token: confirmToken
+        full_name: body.full_name,
+        email: body.email,
+        phone: body.phone,
+        password: hashPassword,
+        confirm_token: confirmToken
     });
 
     return await user.save();
-
 }
+
 
 var registerUser = async function(body) 
 {
@@ -75,9 +80,9 @@ var registerUser = async function(body)
 
     const mailOptions = {
         from: process.env.MAIL_USER,
-        to: user.u_email,
+        to: user.email,
         subject: 'Confirm mail Sanve',
-        text: process.env.URL + 'api/user/confirm?token=' + user.u_confirm_token 
+        text: process.env.URL + 'api/user/confirm?token=' + user.confirm_token 
     };
 
     mail.sendMail(mailOptions, function(error, info) {

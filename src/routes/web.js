@@ -1,21 +1,39 @@
-const router = require('express').Router();
-const Web = require('../models/Web');
-const verifyToken = require('../service/authService').verifyToken;
+// const Router = require('express-async-router').AsyncRouter;
+// const router = Router();
 
-router.get('/' ,async (req, res) => {
+var express = require('express');
+var router = express.Router();
+
+const webService = require('../service/webService');
+
+router.get('/' ,async (req, res, next) => {
     
     const domain = req.query.domain
 
-    const web = await webService.findByDomain(domain)
+    try {
 
-    res.send(web)
+        const web = await webService.findByDomain(domain)
+
+        res.send(web)
+
+    } catch(eror) {
+
+        next(eror);
+        
+    }
 })
 
-router.post('/create' , async (req, res) => {
+router.post('/create' , async (req, res, next) => {
     
-    const web = await webService.createWeb(req.body)
+    try {
+        const web = await webService.registerWeb(req.body)
 
-    res.send(web)
+        res.send(web)
+
+    } catch (error) {
+        next(error)
+    }
+    
 
 })
 

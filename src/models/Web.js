@@ -4,8 +4,6 @@ const webSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        index: true,
-        unique : true,
     },
     domain: {
         type: String,
@@ -67,3 +65,4 @@ webSchema.statics.findByDomain = async (domain) => {
 const Web = mongoose.model('Web', webSchema)
 
 module.exports = Web
+

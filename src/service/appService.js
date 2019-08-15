@@ -72,16 +72,11 @@ var  loginApp = async function (body)
 {
     let checker = false;
     
-    try {
         
-        loginRequestValidation(body)
+    loginRequestValidation(body)
 
-        checker = await checkAppToLogin(body)    
+    checker = await checkAppToLogin(body)    
     
-    } catch (error) {
-        throw error
-    }
-
 
     const app = await App.findOne({a_email: body.email});
 

@@ -1,7 +1,9 @@
 const {CustomError} = require('../helper/customException');
 
 function handleException(err, req, res, next) 
-{
+{   
+    console.log(err)
+
     errResp = {
         status: 500,
         code: err.code,
