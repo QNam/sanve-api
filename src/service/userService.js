@@ -3,6 +3,10 @@ const bcrypt  = require('bcryptjs');
 const mail    = require('../helper/mail');
 const Joi     = require('@hapi/joi');
 const customError = require('../helper/customException');
+const Logger = require('../helper/logger');
+
+const logger = new Logger().getInstance();
+
 const errorCode = customError.errorCode;
 
 
@@ -43,9 +47,9 @@ function registerRequestValidation(data)
  
 async function saveUserToDatabase(body) 
 {
-   let user = await WebUser.findOne({email: body.email});
+    let user = await WebUser.findOne({email: body.email});
 
-     if (user) 
+    if (user) 
         throw customError.createRequestError(errorCode.badRequest, 'Account already existed');
 
     return createUser(body);
@@ -53,31 +57,27 @@ async function saveUserToDatabase(body)
 
 async function createUser(body) 
 {
-    const salt = await bcrypt.genSalt(10)
-
-    const hashPassword = await bcrypt.hash(body.password, salt);
-    const confirmToken = await bcrypt.hash(body.email, salt);
+    const salt = await bcrypt.genSalt(10);
 
     var user = new WebUser({
         full_name: body.full_name,
         email: body.email,
         phone: body.phone,
-        password: hashPassword,
-        confirm_token: confirmToken
     });
 
-    return await user.save();
+    var passwordPromise = bcrypt.hash(body.password, salt)
+    .then((pass) => user.password = pass);
+
+    var tokenPromise = bcrypt.hash(body.email, salt)
+    .then((token) => user.confirm_token = token);
+
+    await Promise.all([passwordPromise, tokenPromise]);
+
+    return user.save();
 }
 
-
-var registerUser = async function(body) 
+function sendMailToRegisteredUser(user)
 {
-
-    const err = registerRequestValidation(body);
-
-    var user = await saveUserToDatabase(body);
-
-
     const mailOptions = {
         from: process.env.MAIL_USER,
         to: user.email,
@@ -92,8 +92,18 @@ var registerUser = async function(body)
           console.log('Email sent: ' + info.response);
         }
     });
+}
 
-    return user;
+var registerUser = async function(body) 
+{
+    logger.info('test');
+    // const err = registerRequestValidation(body);
+
+    // var user = saveUserToDatabase(body);
+
+    // sendMailToRegisteredUser(user);
+
+    return {};
 }
 
 module.exports.confirmUser = confirmUser;
