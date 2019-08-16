@@ -76,6 +76,7 @@ async function createUser(body)
     return user.save();
 }
 
+
 function sendMailToRegisteredUser(user)
 {
     const mailOptions = {
@@ -94,16 +95,17 @@ function sendMailToRegisteredUser(user)
     });
 }
 
+
 var registerUser = async function(body) 
 {
     logger.info('test');
-    // const err = registerRequestValidation(body);
+    const err = registerRequestValidation(body);
 
-    // var user = await saveUserToDatabase(body);
+    var user = await saveUserToDatabase(body);
 
-    // sendMailToRegisteredUser(user);
+    sendMailToRegisteredUser(user);
 
-    // return {};
+    return {};
 }
 
 module.exports.confirmUser = confirmUser;
