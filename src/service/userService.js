@@ -99,11 +99,11 @@ var registerUser = async function(body)
     logger.info('test');
     // const err = registerRequestValidation(body);
 
-    // var user = saveUserToDatabase(body);
+    // var user = await saveUserToDatabase(body);
 
     // sendMailToRegisteredUser(user);
 
-    return {};
+    // return {};
 }
 
 module.exports.confirmUser = confirmUser;
