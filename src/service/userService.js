@@ -103,7 +103,7 @@ var registerUser = async function(body)
 
     var user = await saveUserToDatabase(body);
 
-    sendMailToRegisteredUser(user);
+    // sendMailToRegisteredUser(user);
 
     return user;
 }
