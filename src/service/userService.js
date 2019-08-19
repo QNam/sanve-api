@@ -105,7 +105,7 @@ var registerUser = async function(body)
 
     sendMailToRegisteredUser(user);
 
-    return {};
+    return user;
 }
 
 module.exports.confirmUser = confirmUser;
