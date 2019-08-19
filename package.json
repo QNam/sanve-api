@@ -23,6 +23,7 @@
   },
   "scripts": {
     "start": "nodemon src/index.js",
+    "dev": "node src/index.js",
     "debug": "DEBUG=express:* nodemon src/index.js"
   },
   "keywords": [],
