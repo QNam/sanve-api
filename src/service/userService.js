@@ -5,6 +5,7 @@ const Joi     = require('@hapi/joi');
 const customError = require('../helper/customException');
 const Logger = require('../helper/logger');
 const validator = require('../validators/userValidator');
+const token = require('../helper/token');
 const errorCode = customError.errorCode;
 
 const logger = new Logger().getInstance();
@@ -49,7 +50,8 @@ async function createUser(body)
 
     await Promise.all([passwordPromise, tokenPromise]);
 
-    return user.save();
+    user.save();
+    return user.toObject();
 }
 
 
@@ -71,7 +73,6 @@ function sendMailToRegisteredUser(user)
     });
 }
 
-
 var registerUser = async function(body) 
 {
     logger.info('test');
@@ -80,6 +81,10 @@ var registerUser = async function(body)
     var user = await saveUserToDatabase(body);
 
     // sendMailToRegisteredUser(user);
+    var accessToken = await token.generateAccessToken(user);
+    logger.debug(accessToken);
+    
+    user.accessToken = accessToken;
 
     return user;
 }

@@ -15,6 +15,13 @@ const options = {
         transports: [
             new winston.transports.Console()
         ]
+    },
+    debug: {
+        llevel: 'debug',
+        format: winston.format.json(),
+        transports: [
+            new winston.transports.Console()
+        ]
     }
 }
 
