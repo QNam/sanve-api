@@ -30,14 +30,15 @@ function verifyToken(headers, callback)
         });
 }
 
-function generateToken(user, expiredTime, callback) 
-{
-    var tokenPayload = {
-        email: user.email
-    };
+async function generateToken(user, expiredTime) {
+    var payload = {
+        id: user._id,
+        email: user.email,
+    }
 
-    jwt.sign(tokenPayload, process.env.ACCESS_TOKEN_SECRET, 
-        { algorithm: 'RS256', expiresIn: expiredTime }, callback);
+    var sign = promisify(jwt.sign);
+
+    return sign(payload, process.env.ACCESS_TOKEN_SECRET, signOptions);
 }
 
 module.exports = {

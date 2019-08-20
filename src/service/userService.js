@@ -5,7 +5,7 @@ const Joi     = require('@hapi/joi');
 const customError = require('../helper/customException');
 const Logger = require('../helper/logger');
 const validator = require('../validators/userValidator');
-const token = require('../helper/token');
+const authService = require('./authService');
 const errorCode = customError.errorCode;
 
 const logger = new Logger().getInstance();
@@ -81,7 +81,7 @@ var registerUser = async function(body)
     var user = await saveUserToDatabase(body);
 
     // sendMailToRegisteredUser(user);
-    var accessToken = await token.generateAccessToken(user);
+    var accessToken = await authService.generateToken(user);
     logger.debug(accessToken);
     
     user.accessToken = accessToken;
