@@ -41,8 +41,15 @@ const webSchema = new mongoose.Schema({
         email: {
             type: String,
         },
+        phone: [{
+            title: String,
+            content: String
+        }],
         address: {
-            type: String,
+            province: String,
+            district: String,
+            address: String,
+            map: String
         }
     }
     

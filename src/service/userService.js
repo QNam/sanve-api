@@ -22,7 +22,6 @@ var confirmUser = async function(req, res)
 
 }
 
-
 function registerRequestValidation(data) 
 {
     const schema = {
