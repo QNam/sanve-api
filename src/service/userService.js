@@ -1,20 +1,19 @@
-const WebUser = require('../models/WebUser');
+const User = require('../models/User');
 const bcrypt  = require('bcryptjs');
 const mail    = require('../helper/mail');
 const Joi     = require('@hapi/joi');
 const customError = require('../helper/customException');
 const Logger = require('../helper/logger');
-
-const logger = new Logger().getInstance();
-
+const validator = require('../validators/userValidator');
 const errorCode = customError.errorCode;
 
+const logger = new Logger().getInstance();
 
 var confirmUser = async function(req, res) 
 {
 
-   const user = await WebUser.findOne({confirm_token: req.query.token});
-   user.status = 1
+   const user = await User.findOne({confirm_token: req.query.token});
+   user.status = User.ACTIVE;
  
    let userSaved = await user.save();
 
@@ -22,31 +21,9 @@ var confirmUser = async function(req, res)
 
 }
 
-function registerRequestValidation(data) 
-{
-    const schema = {
-        full_name: Joi.string().max(255).required(),
-        email: Joi.string().min(6).required(),
-        phone: Joi.string().min(9).required(),
-        password: Joi.string().min(6).required(),
-    };
-
-    Joi.validate(data, schema, (err, val) => {
-      
-        if (err)
-            throw customError.createRequestValidateError(
-                {
-                    message: err.details[0].message, 
-                    field: err.details[0].message.match(/"(.+)"/)[1]
-                },
-            );
-    });
-    
-}
- 
 async function saveUserToDatabase(body) 
 {
-    let user = await WebUser.findOne({email: body.email});
+    let user = await User.findOne({email: body.email});
 
     if (user) 
         throw customError.createRequestError(errorCode.badRequest, 'Account already existed');
@@ -58,7 +35,7 @@ async function createUser(body)
 {
     const salt = await bcrypt.genSalt(10);
 
-    var user = new WebUser({
+    var user = new User({
         full_name: body.full_name,
         email: body.email,
         phone: body.phone,
@@ -98,7 +75,7 @@ function sendMailToRegisteredUser(user)
 var registerUser = async function(body) 
 {
     logger.info('test');
-    const err = registerRequestValidation(body);
+    await validator.registerRequestValidation(body);
 
     var user = await saveUserToDatabase(body);
 

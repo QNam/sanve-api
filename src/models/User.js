@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const webUserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     full_name: {
         type: String,
         required: true,
@@ -42,6 +42,10 @@ const webUserSchema = new mongoose.Schema({
 });
 
 
-const WebUser = mongoose.model('web_user', webUserSchema)
+const User = mongoose.model('user', userSchema)
+User.prototype.statuses = {
+    ACTIVE: 1,
+    INACTIVE: -1
+};
 
-module.exports = WebUser
+module.exports = User

@@ -1,4 +1,5 @@
 var winston = require('winston');
+require('dotenv').config();
 
 const options = {
     dev: {

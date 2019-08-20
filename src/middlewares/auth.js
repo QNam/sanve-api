@@ -19,6 +19,8 @@ function verifyPermission(permission)
 
 function hasPermission(permission, payload)
 {
+    if (permission === '') return true;
+    
     return payload.permissions.includes(permission);
 }
 

@@ -7,8 +7,8 @@ const exceptionHandler = require('./middlewares/exceptionHandler');
 
 const app = express();
 
-
 dotenv.config();
+
 console.log(process.env.DB_CONNECT);
 
 app.use(express.json());

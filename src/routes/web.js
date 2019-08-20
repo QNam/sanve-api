@@ -22,9 +22,9 @@ router.get('/' ,async (req, res, next) => {
         next(eror);
         
     }
-})
+});
 
-router.post('/create' , 
+router.post('/create', authenticate.verifyPermission(''),
     async (req, res, next) => {
     
     try {
@@ -37,6 +37,6 @@ router.post('/create' ,
     }
     
 
-})
+});
 
-module.exports = router
+module.exports = router;

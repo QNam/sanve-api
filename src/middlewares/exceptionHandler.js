@@ -1,8 +1,11 @@
 const {CustomError} = require('../helper/customException');
+const Logger = require('../helper/logger');
+
+const logger = new Logger().getInstance();
 
 function handleException(err, req, res, next) 
 {
-    console.log(err);
+    logger.warn(err);
     errResp = {
         status: 500,
         code: err.code,
