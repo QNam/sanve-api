@@ -5,13 +5,10 @@ function verifyPermission(permission)
 {
     return function(req, res, next) 
     {
-        authService.verifyToken(req.header('Authentication'), (err, decoded) => {
-            if (err) {
-                return next(err);
-            }
-
+        authService.verifyToken(req.header('Authentication'))
+        .then (decoded => {
             if (!hasPermission(permission, decoded)) {
-                return next(customError.createAuthorizationError(customError.errCode.accessDenied, 'Access denied'));
+                next(customError.createAuthorizationError(customError.errCode.accessDenied, 'Access denied'));
             }
         });
     }

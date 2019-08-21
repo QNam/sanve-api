@@ -1,8 +1,15 @@
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
+const { promisify } = require('util');
+const crypto = require('crypto');
 const { errorCode, createAuthenticationError } = require('../helper/customException');
 
-function verifyToken(headers, callback) 
+const signOptions = {
+    algorithm: 'HS256',
+    expiresIn: process.env.ACCESS_TOKEN_LIFE
+}
+
+async function verifyToken(headers) 
 {
     if (!headers) {
         throw createAuthenticationError(errorCode.authentication, 'Token invalid');
@@ -11,23 +18,19 @@ function verifyToken(headers, callback)
     const bearer = bearerHeader.split(" ");
     const access_token = bearer[1];
 
-    const decodedToken = null;
-    const verified = jwt.verify(
-        access_token,
-        process.env.ACCESS_TOKEN_SECRET,
-        function (err, decoded) {
-            
-            if (err != null) {
-                if (err != null && err.name == 'TokenExpiredError') {
-                    err = createAuthenticationError(errorCode.authentication, 'Token expired');
-                } else {
-                    err = createAuthenticationError(errorCode.authentication, 'Token invalid');
-                }
+    var verify = promisify(jwt.verify);
 
+    return verify(access_token, process.env.ACCESS_TOKEN_SECRET)
+    .catch(err => {
+        if (err != null) {
+            if (err != null && err.name == 'TokenExpiredError') {
+                err = createAuthenticationError(errorCode.authentication, 'Token expired');
             } else {
-                callback(err, decoded);
+                err = createAuthenticationError(errorCode.authentication, 'Token invalid');
             }
-        });
+
+        }
+    });
 }
 
 async function generateToken(user, expiredTime) {
@@ -39,6 +42,10 @@ async function generateToken(user, expiredTime) {
     var sign = promisify(jwt.sign);
 
     return sign(payload, process.env.ACCESS_TOKEN_SECRET, signOptions);
+}
+
+async function generateRefreshToken(user) {
+
 }
 
 module.exports = {

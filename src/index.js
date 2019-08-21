@@ -1,4 +1,3 @@
-
 const dotenv   = require('dotenv');
 const express  = require('express');
 const mongoose = require('mongoose');
@@ -26,7 +25,10 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use('/api/webs', require('./routes/web'));
 app.use('/api/user', require('./routes/webUser'));
-app.use('/api/apps', require('./routes/app'));
+
+app.use('*', (req, res) => {
+    res.status(404).send({ status: 404, code: 1001, err: '404 Not Found'});
+});
 
 app.use(exceptionHandler.handleException);
 

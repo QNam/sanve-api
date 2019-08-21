@@ -18,8 +18,7 @@ var confirmUser = async function(req, res)
  
    let userSaved = await user.save();
 
-   return userSaved
-
+   return userSaved;
 }
 
 async function saveUserToDatabase(body) 
@@ -75,8 +74,7 @@ function sendMailToRegisteredUser(user)
 
 var registerUser = async function(body) 
 {
-    logger.info('test');
-    await validator.registerRequestValidation(body);
+    await validator.registerRequestValidate(body);
 
     var user = await saveUserToDatabase(body);
 
@@ -89,5 +87,30 @@ var registerUser = async function(body)
     return user;
 }
 
+var userLogin = async function(body) 
+{
+    await validator.loginRequestValidate(body);
+
+    var user = await User.findOne({email: body.email});
+    if (!user) {
+        throw customError.createAuthenticationError(errorCode.authentication, 
+            'Invalid username/password');
+    }
+
+    var passMatched = await bcrypt.compare(body.password, user.password);
+    if (!passMatched) {
+        throw customError.createAuthenticationError(errorCode.authentication, 
+            'Invalid username/password');
+    }
+
+    var accessToken = await authService.generateToken(user);
+    logger.debug(accessToken);
+    
+    user.accessToken = accessToken;
+
+    return user;
+}
+
 module.exports.confirmUser = confirmUser;
 module.exports.registerUser = registerUser;
+module.exports.userLogin = userLogin;

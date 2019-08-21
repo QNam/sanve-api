@@ -5,7 +5,7 @@ const logger = new Logger().getInstance();
 
 function handleException(err, req, res, next) 
 {
-    console.log(err)
+    logger.warn(err.stack);
     errResp = {
         status: 500,
         code: err.code,

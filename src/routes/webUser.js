@@ -29,4 +29,10 @@ router.post('/register', async (req, res, next) => {
     
 });
 
+router.post('/login', async (req, res, next) => {
+    userService.userLogin(req.body)
+    .then(res.send)
+    .catch(next);
+})
+
 module.exports = router;

@@ -58,14 +58,7 @@ const webSchema = new mongoose.Schema({
 
 webSchema.statics.findByDomain = async (domain) => {
     // Search for a web by domain
-    const web = await Web.findOne({ domain: domain })
-
-    if (!web) {
-        throw { name: 'DomainNotExists',
-                message: "Domain not exists !" }
-    }
-  
-    return web;
+    return await Web.findOne({ domain: domain })
 }
 
 
