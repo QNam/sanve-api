@@ -9,26 +9,23 @@ const signOptions = {
     expiresIn: process.env.ACCESS_TOKEN_LIFE
 }
 
-async function verifyToken(headers) 
+function verifyToken(headers) 
 {
     if (!headers) {
         throw createAuthenticationError(errorCode.authentication, 'Token invalid');
     }
         
-    const bearer = bearerHeader.split(" ");
+    const bearer = headers.split(" ");
     const access_token = bearer[1];
 
     var verify = promisify(jwt.verify);
 
     return verify(access_token, process.env.ACCESS_TOKEN_SECRET)
     .catch(err => {
-        if (err != null) {
-            if (err != null && err.name == 'TokenExpiredError') {
-                err = createAuthenticationError(errorCode.authentication, 'Token expired');
-            } else {
-                err = createAuthenticationError(errorCode.authentication, 'Token invalid');
-            }
-
+        if (err.name == 'TokenExpiredError') {
+            throw createAuthenticationError(errorCode.authentication, 'Token expired');
+        } else {
+            throw createAuthenticationError(errorCode.authentication, 'Token invalid');
         }
     });
 }

@@ -17,8 +17,8 @@ const options = {
         ]
     },
     debug: {
-        llevel: 'debug',
-        format: winston.format.json(),
+        level: 'debug',
+        format: winston.format.simple(),
         transports: [
             new winston.transports.Console()
         ]
@@ -31,6 +31,7 @@ class Logger
     constructor() {
         if (!Logger.instance) {
             Logger.instance = winston.createLogger(options[process.env.ENV]);
+            Logger.instance.info(process.env.ENV);
         }
     }
 

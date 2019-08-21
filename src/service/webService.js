@@ -42,10 +42,10 @@ async function saveWebToDataBase(body)
 
 var registerWeb = async function(body) 
 {
-    validator.createRequestValidate(body);
+    // validator.createRequestValidate(body);
 
-    return await saveWebToDataBase(body)
-
+    // return await saveWebToDataBase(body)
+    return '{}';
 }
 
 

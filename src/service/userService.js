@@ -6,6 +6,7 @@ const customError = require('../helper/customException');
 const Logger = require('../helper/logger');
 const validator = require('../validators/userValidator');
 const authService = require('./authService');
+const UserDTO = require('./dtos/UserDTO');
 const errorCode = customError.errorCode;
 
 const logger = new Logger().getInstance();
@@ -106,9 +107,10 @@ var userLogin = async function(body)
     var accessToken = await authService.generateToken(user);
     logger.debug(accessToken);
     
-    user.accessToken = accessToken;
+    var dto = new UserDTO(user);
+    dto.accessToken = accessToken;
 
-    return user;
+    return dto;
 }
 
 module.exports.confirmUser = confirmUser;
