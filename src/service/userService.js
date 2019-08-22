@@ -1,20 +1,23 @@
 const User = require('../models/User');
 const bcrypt  = require('bcryptjs');
+const crypto = require('crypto');
 const mail    = require('../helper/mail');
 const Joi     = require('@hapi/joi');
 const customError = require('../helper/customException');
 const Logger = require('../helper/logger');
 const validator = require('../validators/userValidator');
 const authService = require('./authService');
+const smsService = require('./smsService');
 const UserDTO = require('./dtos/UserDTO');
+const randomizer = require('../helper/randomizer');
 const errorCode = customError.errorCode;
 
 const logger = new Logger().getInstance();
 
-var confirmUser = async function(req, res) 
+var confirmUser = async function(userId) 
 {
 
-   const user = await User.findOne({confirm_token: req.query.token});
+   const user = await User.findOne({ _id: userId });
    user.status = User.ACTIVE;
  
    let userSaved = await user.save();
@@ -42,35 +45,23 @@ async function createUser(body)
         phone: body.phone,
     });
 
-    var passwordPromise = bcrypt.hash(body.password, salt)
-    .then((pass) => user.password = pass);
+    user.password = await bcrypt.hash(body.password, salt)
 
-    var tokenPromise = bcrypt.hash(body.email, salt)
-    .then((token) => user.confirm_token = token);
+    user.refresh_token = randomizer.generateRandomToken(40);
 
-    await Promise.all([passwordPromise, tokenPromise]);
+    var otp = randomizer.generateNumericCode(6);
+    user.confirm_token.otp = otp;
 
     user.save();
     return user.toObject();
 }
 
 
-function sendMailToRegisteredUser(user)
+function sendVerificationSMS(user)
 {
-    const mailOptions = {
-        from: process.env.MAIL_USER,
-        to: user.email,
-        subject: 'Confirm mail Sanve',
-        text: process.env.URL + 'api/user/confirm?token=' + user.confirm_token 
-    };
-
-    mail.sendMail(mailOptions, function(error, info) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-    });
+    content = user.confirm_token.otp + ' is your OTP at ' + process.env.APP_NAME;
+    
+    smsService.sendSMS(user.phone, content);
 }
 
 var registerUser = async function(body) 
@@ -79,7 +70,8 @@ var registerUser = async function(body)
 
     var user = await saveUserToDatabase(body);
 
-    // sendMailToRegisteredUser(user);
+    sendVerificationSMS(user);
+    
     var accessToken = await authService.generateToken(user);
     logger.debug(accessToken);
     

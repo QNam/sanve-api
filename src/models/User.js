@@ -36,9 +36,13 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     confirm_token: {
-        type: String
-    },
+        otp: String,
 
+        invalid: {
+            type: Number,
+            default: 0
+        }
+    }
 });
 
 
