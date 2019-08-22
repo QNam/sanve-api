@@ -14,11 +14,6 @@ router.get('/confirm', async (req, res, next) => {
     await userService.confirmUser(req, res);
 });
 
-router.get('/:userId/verify', async (req, res, next) => {
-    smsService.sendSMS('0362205275', 'test message')
-    .catch(next);
-});
-
 router.post('/register', async (req, res, next) => {
 
     try {

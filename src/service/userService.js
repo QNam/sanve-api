@@ -16,7 +16,6 @@ const logger = new Logger().getInstance();
 
 var confirmUser = async function(userId) 
 {
-
    const user = await User.findOne({ _id: userId });
    user.status = User.ACTIVE;
  
@@ -27,11 +26,18 @@ var confirmUser = async function(userId)
 
 async function saveUserToDatabase(body) 
 {
-    let user = await User.findOne({email: body.email});
+    var users = await User.find({ $or: [{email: body.email}, {phone: body.phone}]});
 
-    if (user) 
-        throw customError.createRequestError(errorCode.badRequest, 'Account already existed');
-
+    if (users) {
+        users.forEach(user => {
+            logger.info(user._id);
+            if (user.status > 0)
+                throw customError.createRequestError(errorCode.badRequest, 'Account already existed');
+            else 
+                user.remove();
+        });
+    }
+        
     return createUser(body);
 }
 
@@ -52,7 +58,8 @@ async function createUser(body)
     var otp = randomizer.generateNumericCode(6);
     user.confirm_token.otp = otp;
 
-    user.save();
+    user.save().catch(err => {throw err});
+
     return user.toObject();
 }
 
@@ -70,7 +77,7 @@ var registerUser = async function(body)
 
     var user = await saveUserToDatabase(body);
 
-    sendVerificationSMS(user);
+    // sendVerificationSMS(user);
     
     var accessToken = await authService.generateToken(user);
     logger.debug(accessToken);
