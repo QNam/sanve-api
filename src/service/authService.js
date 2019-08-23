@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
 const { promisify } = require('util');
 const crypto = require('crypto');
-const { errorCode, createAuthenticationError } = require('../helper/customException');
+const { errorCode, createAuthenticationError } = require('../helper/customError');
 
 const signOptions = {
     algorithm: 'HS256',

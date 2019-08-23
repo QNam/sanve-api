@@ -1,7 +1,7 @@
 const validate = require('./validator');
 const Joi = require('@hapi/joi');
 const util = require('util');
-const customError = require('../helper/customException');
+const customError = require('../helper/customError');
 
 // var validate = util.promisify(Joi.validate);
 

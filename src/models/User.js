@@ -38,16 +38,18 @@ const userSchema = new mongoose.Schema({
     confirm_token: {
         otp: String,
 
-        invalid: {
+        tried: {
             type: Number,
             default: 0
-        }
+        },
+
+        last_send: Date
     }
 });
 
 
 const User = mongoose.model('user', userSchema)
-User.prototype.statuses = {
+User.statuses = {
     ACTIVE: 1,
     INACTIVE: -1
 };

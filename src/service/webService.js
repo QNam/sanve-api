@@ -1,5 +1,5 @@
 const Web = require('../models/Web');
-const customError = require('../helper/customException');
+const customError = require('../helper/customError');
 const errorCode = customError.errorCode;
 const validator = require('../validators/webValidator');
 

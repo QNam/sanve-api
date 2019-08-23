@@ -1,5 +1,5 @@
 const authService = require('../service/authService');
-const customError = require('../helper/customException');
+const customError = require('../helper/customError');
 
 function verifyPermission(permission)
 {

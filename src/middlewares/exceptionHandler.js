@@ -1,4 +1,4 @@
-const {CustomError} = require('../helper/customException');
+const {CustomError} = require('../helper/customError');
 const Logger = require('../helper/logger');
 
 const logger = new Logger().getInstance();

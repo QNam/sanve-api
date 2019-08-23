@@ -6,16 +6,17 @@ var router = express.Router();
 const Logger = require('../helper/logger');
 const userService = require('../service/userService');
 const smsService = require('../service/smsService');
-const error = require('../helper/customException')
+const error = require('../helper/customError')
 
 const logger = new Logger().getInstance();
 
-router.get('/confirm', async (req, res, next) => {
-    await userService.confirmUser(req, res);
+router.get('/:uid/verify', async (req, res, next) => {
+    userService.confirmUser(req.params.uid, req.query.OTP)
+    .then(rs => res.send({ result: 'success' }))
+    .catch(next);
 });
 
 router.post('/register', async (req, res, next) => {
-
     try {
     
         var user = await userService.registerUser(req.body);
