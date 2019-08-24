@@ -10,7 +10,7 @@ dotenv.config();
 
 console.log(process.env.DB_CONNECT);
 
-app.use(express.json());
+app.use(bodyParser.json());
 
 mongoose.connect(
     process.env.DB_CONNECT, 
