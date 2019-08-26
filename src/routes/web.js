@@ -5,25 +5,16 @@ var express = require('express');
 var router = express.Router();
 var authenticate = require('../middlewares/auth');
 var Logger = require('../helper/logger');
+const Permission = require('../models/Permission');
 
 var logger = new Logger().getInstance();
 
 const webService = require('../service/webService');
 
-router.get('/' ,async (req, res, next) => {
-    
-    const domain = req.query.domain
-
-    webService.findByDomain(domain)
-    .then(web => res.send(web))
-    .catch(next);
-});
-
-router.post('/create', authenticate.verifyPermission(''),
+router.post('/create', authenticate.verifyPermission(Permission.CREATE_WEB),
     async (req, res, next) => {
-
-        webService.registerWeb(req.body)
-        .then(web => res.send(web))
+        webService.registerWeb(req)
+        .then(web => res.send({ web }))
         .catch(next);
 });
 

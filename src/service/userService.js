@@ -10,6 +10,7 @@ const authService = require('./authService');
 const smsService = require('./smsService');
 const UserDTO = require('./dtos/UserDTO');
 const randomizer = require('../helper/randomizer');
+const Permission = require('../models/Permission');
 const errorCode = customError.errorCode;
 
 const logger = new Logger().getInstance();
@@ -19,7 +20,6 @@ const OTP_RESEND_CYCLE = parseInt(process.env.OTP_RESEND_CYCLE)
 var confirmUser = async function(userId, otpCode) 
 {
     var user = await User.findById(userId).exec().catch(err => {throw err});
-    console.log(User.statuses);
 
     if (user.status == User.statuses.INACTIVE && user.confirm_token.otp === otpCode) {
         if (Date.now() - user.confirm_token.last_send > OTP_LIFE)
@@ -28,6 +28,10 @@ var confirmUser = async function(userId, otpCode)
         user.status = User.statuses.ACTIVE;
         user.confirm_token.tried = 0;
         user.confirm_token.otp = "";
+        
+        if (!user.permission.includes(Permission.CREATE_WEB)) {
+            user.permission.push(Permission.CREATE_WEB)
+        }
     } else {
         user.confirm_token += 1;
 
@@ -40,12 +44,20 @@ var confirmUser = async function(userId, otpCode)
         throw customError.createRequestError(errorCode.dataInvalid, 'invalid OTP code') 
     }
 
-    return user.save();
+    user.save();
+
+    var accessToken = await authService.generateToken(user);
+
+    var dto = new UserDTO(user);
+    dto.accessToken = accessToken;
+
+    return dto;
 }
 
 async function createUser(body) 
 {
-    var users = await User.find({ $or: [{email: body.email}, {phone: body.phone}]});
+    var users = await User.find({ $or: [{email: body.email}, {phone: body.phone}]})
+    .catch(err => {throw err});
 
     if (users) {
         users.forEach(user => {
@@ -54,7 +66,7 @@ async function createUser(body)
             if (user.status > 0)
                 throw customError.createRequestError(errorCode.badRequest, 'Account already existed');
             else 
-                user.remove();
+                user.remove().catch(err => {throw err});
         });
     }
         
@@ -106,10 +118,14 @@ var registerUser = async function(body)
 
     await sendVerificationSMS(user);
 
-    user.save().catch(err => {throw err});
+    var save = user.save();
     
-    var accessToken = await authService.generateToken(user);
+    var genToken = authService.generateToken(user);
     logger.debug(accessToken);
+
+    var accessToken = await Promise.all([save, genToken]).then(([user, token]) => {
+        return token;
+    })
 
     var dto = new UserDTO(user);
     dto.accessToken = accessToken;

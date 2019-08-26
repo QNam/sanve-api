@@ -1,5 +1,5 @@
 const Permission = {
-    CREATE_THEME: 'CREATE_THEME',
+    CREATE_WEB: 'CREATE_WEB',
 }
 
 module.exports = Permission;

@@ -34,6 +34,8 @@ async function generateToken(user, expiredTime) {
     var payload = {
         id: user._id,
         email: user.email,
+        permission: user.permission,
+        status: user.status
     }
 
     var sign = promisify(jwt.sign);

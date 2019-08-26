@@ -6,8 +6,8 @@ const Logger = require('../helper/logger');
 
 const logger = new Logger().getInstance(); 
 
-var speedSMSurl = 'https://api.speedsms.vn/index.php/sms/send';
-// var speedSMSurl = 'https://ena4go9bv3bxm.x.pipedream.net/';
+// var speedSMSurl = 'https://api.speedsms.vn/index.php/sms/send';
+var speedSMSurl = 'https://ena4go9bv3bxm.x.pipedream.net/';
 
 function sendSMS(phone, content) 
 {
@@ -29,7 +29,8 @@ function sendSMS(phone, content)
     };
 
     return request(options)
-    .then(body => logger.debug(body));
+    .then(body => logger.debug(body))
+    .catch(err => {});
 }
 
 module.exports = {

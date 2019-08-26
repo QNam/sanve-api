@@ -1,5 +1,57 @@
 const mongoose = require('mongoose');
 
+const webSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    domain: {
+        type: String,
+        required: true,
+        unique : true
+    },
+    theme: {
+        type: Number,
+        default: 1,
+    },
+    status: {
+        type: Number,
+        default: 0,
+    },
+    created: {
+        user: {
+            type: String,
+            required: true,
+        },
+        time: {
+            type: Number
+        },
+    },
+    updated: {
+        user: {
+            type: String,
+        },
+        time: {
+            type: Number
+        },
+    },
+    info: {
+        email: {
+            type: String,
+        },
+        phone: [{
+            title: String,
+            content: String
+        }],
+        address: {
+            province: String,
+            district: String,
+            address: String,
+            map: String
+        }
+    }
+});
+
 const userSchema = new mongoose.Schema({
     full_name: {
         type: String,
@@ -44,8 +96,10 @@ const userSchema = new mongoose.Schema({
         },
 
         last_send: Date
-    }
+    },
+    web: webSchema
 });
+
 
 
 const User = mongoose.model('user', userSchema)

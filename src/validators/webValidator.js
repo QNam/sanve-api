@@ -1,14 +1,15 @@
-const validator = require('./validator');
+const {validate, constraint} = require('./validator');
+const customError = require('../helper/customError');
 
 function createRequestValidate(data)
 {
     const schema = {
-        name: Joi.string().required(),
-        domain: Joi.string().min(6).max(255).required(),
-        theme: Joi.string().max(10).required()
-    };
+        name: constraint.string().required(),
+        domain: constraint.string().min(4).max(255).required(),
+        theme: constraint.number().required()
+    }
 
-    return validate.validate(data, schema)
+    return validate(data, schema)
     .catch(err => { 
         throw customError.createRequestValidateError(
             {
@@ -18,4 +19,6 @@ function createRequestValidate(data)
     });
 }
 
-module.exports = createRequestValidate;
+module.exports = {
+    createRequestValidate
+}

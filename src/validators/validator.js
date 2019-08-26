@@ -11,6 +11,9 @@ var validate = async function(data, schema) {
     })
 }
 
+var constraint = Joi;
+
 module.exports = {
-    validate
+    validate,
+    constraint
 }

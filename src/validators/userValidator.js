@@ -1,21 +1,17 @@
-const validate = require('./validator');
-const Joi = require('@hapi/joi');
-const util = require('util');
+const {validate, constraint} = require('./validator');
 const customError = require('../helper/customError');
-
-// var validate = util.promisify(Joi.validate);
 
 function registerRequestValidate(data) 
 {
     const schema = {
-        full_name: Joi.string().max(255).required(),
-        email: Joi.string().min(6).required(),
-        phone: Joi.string().min(9).required(),
-        password: Joi.string().min(6).max(256).required(),
+        full_name: constraint.string().max(255).required(),
+        email: constraint.string().min(6).required(),
+        phone: constraint.string().min(9).required(),
+        password: constraint.string().min(6).max(256).required(),
     };
 
 
-    return validate.validate(data, schema)
+    return validate(data, schema)
     .catch(err => { 
         throw customError.createRequestValidateError(
             {
@@ -28,11 +24,11 @@ function registerRequestValidate(data)
 function loginRequestValidate(data)
 {
     const schema = {
-        email: Joi.string().min(6).required(),
-        password: Joi.string().required()
+        email: constraint.string().min(6).required(),
+        password: constraint.string().required()
     }
 
-    return validate.validate(data, schema)
+    return validate(data, schema)
     .catch(err => { 
         throw customError.createRequestValidateError(
             {
