@@ -110,6 +110,13 @@ async function sendVerificationSMS(user)
     }
 }
 
+var resendVerificationSMS = async function(userId) 
+{
+    var user = await User.findById(userId);
+
+    return sendVerificationSMS(user);
+}
+
 var registerUser = async function(body) 
 {
     await validator.registerRequestValidate(body);
@@ -161,5 +168,6 @@ var userLogin = async function(body)
 module.exports = {
     confirmUser,
     registerUser,
-    userLogin
+    userLogin,
+    resendVerificationSMS
 }

@@ -17,6 +17,7 @@ function verifyPermission(permission)
                 next(customError.createAuthorizationError(errorCode.accessDenied, 'Access denied'));
             }
 
+            // set authentication to request object
             req.locals = req.locals ? req.locals : {};
             req.locals.auth = decoded;
 
