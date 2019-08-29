@@ -1,6 +1,7 @@
 var Joi = require('@hapi/joi');
 
-var validate = async function(data, schema) {
+var validate = async function(data, schema) 
+{
     return new Promise(function(resolve, reject) {
         Joi.validate(data, schema, function (err, res) {
             if (err)
@@ -9,7 +10,7 @@ var validate = async function(data, schema) {
             return resolve(res);
         })
     })
-}
+};
 
 var constraint = Joi;
 

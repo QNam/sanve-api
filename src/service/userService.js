@@ -165,9 +165,27 @@ var userLogin = async function(body)
     return dto;
 }
 
+var verifyPhoneOrEmailExisted = async function(fieldQuery) 
+{
+    logger.info('query: ', fieldQuery);
+    await validator.verifyPhoneEmailRequestValidate(fieldQuery);
+
+    var query = {};
+    query[fieldQuery.field] = fieldQuery.value;
+    query.status = { $gt: 0 };
+
+    var user = await User.findOne(query);
+
+    if (user)
+        return true;
+    else
+        return false;
+}
+
 module.exports = {
     confirmUser,
     registerUser,
     userLogin,
-    resendVerificationSMS
+    resendVerificationSMS,
+    verifyPhoneOrEmailExisted
 }

@@ -38,7 +38,25 @@ function loginRequestValidate(data)
     });
 }
 
+function verifyPhoneEmailRequestValidate(data) 
+{
+    const schema = {
+        field: constraint.string().valid(['email', 'phone']).required(),
+        value: constraint.string().required()
+    }
+
+    return validate(data, schema)
+    .catch(err => { 
+        throw customError.createRequestValidateError(
+            {
+                message: err.details[0].message, 
+                field: err.details[0].message.match(/"(.+)"/)[1]
+            })
+    }); 
+}
+
 module.exports = {
     registerRequestValidate,
-    loginRequestValidate
+    loginRequestValidate,
+    verifyPhoneEmailRequestValidate
 }

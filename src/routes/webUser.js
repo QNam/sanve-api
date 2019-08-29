@@ -36,4 +36,10 @@ router.post('/login', async (req, res, next) => {
     .catch(next);
 })
 
+router.get('/existence', async (req, res, next) => {
+    userService.verifyPhoneOrEmailExisted(req.query)
+    .then(existed => res.send({ existed }))
+    .catch(next);
+});
+
 module.exports = router;
