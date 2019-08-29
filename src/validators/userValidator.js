@@ -42,7 +42,7 @@ function verifyPhoneEmailRequestValidate(data)
 {
     const schema = {
         field: constraint.string().valid(['email', 'phone']).required(),
-        value: constraint.string().required()
+        value: constraint.string().min(5).required()
     }
 
     return validate(data, schema)
