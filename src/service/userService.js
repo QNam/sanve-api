@@ -49,7 +49,7 @@ var confirmUser = async function(userId, otpCode)
     var accessToken = await authService.generateToken(user);
 
     var dto = new UserDTO(user);
-    dto.accessToken = accessToken;
+    dto.access_token = accessToken;
 
     return dto;
 }
