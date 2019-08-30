@@ -28,9 +28,11 @@ function sendSMS(phone, content)
         json: true,
     };
 
-    return request(options)
-    .then(body => logger.debug(body))
-    .catch(err => {});
+    // return request(options)
+    // .then(body => logger.debug(body))
+    // .catch(err => {});
+
+    return new Promise(function(resolve, reject) {resolve()});
 }
 
 module.exports = {

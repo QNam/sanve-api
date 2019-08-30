@@ -114,7 +114,10 @@ var resendVerificationSMS = async function(userId)
 {
     var user = await User.findById(userId);
 
-    return sendVerificationSMS(user);
+    return sendVerificationSMS(user)
+    .then(user.save());
+
+
 }
 
 var registerUser = async function(body) 
