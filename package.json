@@ -1,7 +1,7 @@
 {
   "name": "sanve_api",
   "version": "1.0.0",
-  "description": "",
+  "description": "api sàn vé",
   "main": "index.js",
   "dependencies": {
     "@hapi/joi": "^15.1.0",

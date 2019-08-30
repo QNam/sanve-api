@@ -19,7 +19,7 @@ router.get('/:uid/verify', async (req, res, next) => {
 });
 
 router.post('/resend', verifyPermission(), async (req, res, next) => {
-    user.service.resendVerificationSMS(user.locals.auth)
+    userService.resendVerificationSMS(req.locals.auth)
     .then(rs => {res.send({ result: "success" })})
     .catch(next);
 })
