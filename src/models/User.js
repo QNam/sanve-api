@@ -11,8 +11,8 @@ const webSchema = new mongoose.Schema({
         unique : true
     },
     theme: {
-        type: Number,
-        default: 1,
+        type: String,
+        default: '1',
     },
     status: {
         type: Number,

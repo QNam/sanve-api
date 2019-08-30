@@ -4,7 +4,7 @@ const errorCode = customError.errorCode;
 const validator = require('../validators/webValidator');
 const Logger = require('../helper/logger');
 
-const logger = new Logger().getInstance(); 
+const logger = new Logger().getInstance();
 
 async function createWeb(body, user)
 {
@@ -12,7 +12,6 @@ async function createWeb(body, user)
     const web = {
         name: body.name,
         domain: body.domain,
-        theme: body.theme,
         created: {
             time: Date.now()
         },
@@ -22,7 +21,7 @@ async function createWeb(body, user)
     }
 
     web.created.user = user.id;
-    web.updated.user = user.ud
+    web.updated.user = user.id;
 
     user.web = web;
 
@@ -57,7 +56,31 @@ var registerWeb = async function(req)
     return user.web
 }
 
+var isDomainExisted = async function(domain)
+{
+    return checkDomainExisted(domain)
+    .then(rs => {return false})
+    .catch(err => {return true});
+}
+
+var updateTheme = async function(req)
+{
+    if (!req.locals.auth || req.locals.auth === User.statuses.INACTIVE)
+        throw customError.createAuthorizationError(errorCode.accessDenied, 'Access denied');
+
+    await validator.updateThemeRequestValidate(req.body);
+
+    var user = await User.findById(req.locals.auth.id);
+
+    user.web.theme = req.body.theme;
+    user.web.updated.time = Date.now();
+    user.web.updated.user = user._id;
+
+    return user.save();
+}
 
 module.exports = {
-    registerWeb
+    registerWeb,
+    isDomainExisted,
+    updateTheme
 }

@@ -18,4 +18,18 @@ router.post('/create', authenticate.verifyPermission(Permission.CREATE_WEB),
         .catch(next);
 });
 
+router.post('/theme', authenticate.verifyPermission(Permission.CREATE_WEB),
+    async (req, res, next) => {
+        webService.updateTheme(req)
+        .then(rs => res.send({ result: 'success' }))
+        .catch(next);
+});
+
+router.get('/domain/existence', authenticate.verifyPermission(Permission.CREATE_WEB),
+    async (req, res, next) => {
+        webService.isDomainExisted(req.query.domain)
+        .then(existed => { existed })
+        .catch(next);
+});
+
 module.exports = router;

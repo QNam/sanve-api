@@ -1,4 +1,5 @@
 var Joi = require('@hapi/joi');
+const customError = require('../helper/customError');
 
 var validate = async function(data, schema) 
 {
@@ -9,12 +10,21 @@ var validate = async function(data, schema)
 
             return resolve(res);
         })
-    })
+    });
 };
 
 var constraint = Joi;
 
+var throwErr = function(err) {
+    throw customError.createRequestValidateError(
+        {
+            message: err.details[0].message, 
+            field: err.details[0].message.match(/"(.+)"/)[1]
+        })
+}
+
 module.exports = {
     validate,
-    constraint
+    constraint,
+    throwErr
 }

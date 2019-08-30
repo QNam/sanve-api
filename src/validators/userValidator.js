@@ -1,5 +1,4 @@
-const {validate, constraint} = require('./validator');
-const customError = require('../helper/customError');
+const {validate, constraint, throwErr} = require('./validator');
 
 function registerRequestValidate(data) 
 {
@@ -12,13 +11,7 @@ function registerRequestValidate(data)
 
 
     return validate(data, schema)
-    .catch(err => { 
-        throw customError.createRequestValidateError(
-            {
-                message: err.details[0].message, 
-                field: err.details[0].message.match(/"(.+)"/)[1]
-            })
-    });
+    .catch(throwErr);
 }
 
 function loginRequestValidate(data)
@@ -29,13 +22,7 @@ function loginRequestValidate(data)
     }
 
     return validate(data, schema)
-    .catch(err => { 
-        throw customError.createRequestValidateError(
-            {
-                message: err.details[0].message, 
-                field: err.details[0].message.match(/"(.+)"/)[1]
-            })
-    });
+    .catch(throwErr);
 }
 
 function verifyPhoneEmailRequestValidate(data) 
@@ -46,13 +33,7 @@ function verifyPhoneEmailRequestValidate(data)
     }
 
     return validate(data, schema)
-    .catch(err => { 
-        throw customError.createRequestValidateError(
-            {
-                message: err.details[0].message, 
-                field: err.details[0].message.match(/"(.+)"/)[1]
-            })
-    }); 
+    .catch(throwErr);
 }
 
 module.exports = {
