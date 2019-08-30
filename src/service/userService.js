@@ -135,7 +135,7 @@ var registerUser = async function(body)
     })
 
     var dto = new UserDTO(user);
-    dto.accessToken = accessToken;
+    dto.access_token = accessToken;
 
     return dto;
 }
@@ -160,7 +160,7 @@ var userLogin = async function(body)
     logger.debug(accessToken);
     
     var dto = new UserDTO(user);
-    dto.accessToken = accessToken;
+    dto.access_token = accessToken;
 
     return dto;
 }
