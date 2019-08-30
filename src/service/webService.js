@@ -37,9 +37,12 @@ async function checkDomainExisted(domain)
 {
     return User.findOne({ 'web.domain': domain })
     .then((user) => {
+        logger.info(user);
         if (user)
             throw customError.createRequestError(errorCode.badRequest, 'Domain already existed');
-    })
+
+        return user;
+    });
 }
 
 var registerWeb = async function(req) 
@@ -53,7 +56,7 @@ var registerWeb = async function(req)
 
     var user = await createWeb(req.body, user);
 
-    return user.web
+    return user.web;
 }
 
 var isDomainExisted = async function(domain)

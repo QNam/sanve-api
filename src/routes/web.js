@@ -28,7 +28,7 @@ router.post('/theme', authenticate.verifyPermission(Permission.CREATE_WEB),
 router.get('/domain/existence', authenticate.verifyPermission(Permission.CREATE_WEB),
     async (req, res, next) => {
         webService.isDomainExisted(req.query.domain)
-        .then(existed => { existed })
+        .then(existed => res.send({ existed }))
         .catch(next);
 });
 
