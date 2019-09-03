@@ -17,7 +17,7 @@ mongoose.connect(
     {useNewUrlParser: true}
 );
 
-mongoose.Promise = global.Promise;
+mongoose.Promise = require('bluebird');
 
 var db = mongoose.connection;
 

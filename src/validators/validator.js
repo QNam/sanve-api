@@ -1,5 +1,6 @@
 var Joi = require('@hapi/joi');
 const customError = require('../helper/customError');
+var Promise = require('bluebird');
 
 var validate = async function(data, schema) 
 {

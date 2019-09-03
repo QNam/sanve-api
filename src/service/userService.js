@@ -11,6 +11,7 @@ const smsService = require('./smsService');
 const UserDTO = require('./dtos/UserDTO');
 const randomizer = require('../helper/randomizer');
 const Permission = require('../models/Permission');
+const Promise = require('bluebird')
 const errorCode = customError.errorCode;
 
 const logger = new Logger().getInstance();
@@ -133,7 +134,7 @@ var registerUser = async function(body)
     var genToken = authService.generateToken(user);
     logger.debug(accessToken);
 
-    var accessToken = await Promise.all([save, genToken]).then(([user, token]) => {
+    var accessToken = await Promise.join(save, genToken).then((user, token) => {
         return token;
     })
 
