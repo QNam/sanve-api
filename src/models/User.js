@@ -14,6 +14,10 @@ const webSchema = new mongoose.Schema({
         type: String,
         default: '1',
     },
+    language: {
+        type: String,
+        default: 'vi'
+    },
     status: {
         type: Number,
         default: 0,
