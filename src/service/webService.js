@@ -71,6 +71,9 @@ var updateTheme = async function(req)
     if (!req.locals.auth || req.locals.auth === User.statuses.INACTIVE)
         throw customError.createAuthorizationError(errorCode.accessDenied, 'Access denied');
 
+    if (!req.web)
+        throw customError.createRequestError(errorCode.badRequest, 'Web not created');
+
     await validator.updateThemeRequestValidate(req.body);
 
     var user = await User.findById(req.locals.auth.id);

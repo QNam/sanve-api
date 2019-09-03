@@ -97,12 +97,16 @@ async function createUserTokens(body)
 
 async function sendVerificationSMS(user)
 {
-    content = user.confirm_token.otp + ' is your OTP at ' + process.env.APP_NAME;
+    
     var lastSend = user.confirm_token.last_send ? user.confirm_token.last_send : 0;
     logger.debug(lastSend);
 
     if (Date.now() - lastSend > OTP_RESEND_CYCLE) {
         logger.info("send sms to " + user.phone);
+
+        user.confirm_token.otp = randomizer.generateNumericCode(6);
+
+        content = user.confirm_token.otp + ' is your OTP at ' + process.env.APP_NAME;
         
         return smsService.sendSMS(user.phone, content)
         .then(rs => {
@@ -117,8 +121,6 @@ var resendVerificationSMS = async function(userId)
 
     return sendVerificationSMS(user)
     .then(user.save());
-
-
 }
 
 var registerUser = async function(body) 
